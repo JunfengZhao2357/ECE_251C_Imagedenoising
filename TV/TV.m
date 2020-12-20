@@ -1,12 +1,11 @@
 clc
 clear
-Img0=imread('high.png');%读取图片
+Img0=imread('high.png');
 Img0 = rgb2gray(Img0);
-PSF=fspecial('motion',3);%创建PSF
-gb=imfilter(Img0,PSF,'circular');%创建退化图像
-Img=imnoise(gb,'gaussian',0,0.01);%加高斯噪声
-%Img=imnoise(gb,'salt & pepper',0.05);%加椒盐噪声
-%Img=imnoise(gb,'speckle',0.04);%加乘性噪声
+PSF=fspecial('motion',3);
+gb=imfilter(Img0,PSF,'circular');
+Img=imnoise(gb,'gaussian',0,0.01);
+
 
 %imshow(Img)
 Img=double(Img);
@@ -14,16 +13,12 @@ Img_gaussian_0=Img;
 
 Img0=Img;
 
-[ny,nx]=size(Img); % 获取图像尺寸大小
+[ny,nx]=size(Img); 
 ep=1;
-ep2=ep^2;        % 定义ep2
+ep2=ep^2;        
 lam=0.023;
 dt=0.5;
-for i = 1:20  %迭代
-   % 中心差法计算梯度和微分
-   % WN  N  EN
-   % W   O  E 
-   % WS  S  ES
+for i = 1:20  
    I_x = (Img(:,[2:nx nx])-Img(:,[1 1:nx-1]))/2;  % Ix = (E-W)/2
    I_y = (Img([2:ny ny],:)-Img([1 1:ny-1],:))/2;  % Iy = (S-N)/2
    I_xx = Img(:,[2:nx nx])+Img(:,[1 1:nx-1])-2*Img; % Ixx = E+W-2*O
@@ -36,23 +31,23 @@ for i = 1:20  %迭代
    Num = I_xx.*(ep2+I_y.^2)-2*I_x.*I_y.*I_xy+I_yy.*(ep2+I_x.^2);
    Den = (ep2+I_x.^2+I_y.^2).^(3/2);
    
-   % 计算I_t
+   
    I_t = Num./Den + lam.*(Img0-Img);
-   %梯度下降法迭代求解PDE(扩散)
+   
    Img=Img+dt*I_t; 
 end
 Img_gaussian_1=Img;
 %figure
 %Img4=mat2gray(Img);
 %imshow(Img4)
-% 计算PSNR
+
 
 f1 = Img_gaussian_1;
 f2 = gb;
 % f3=image_gaosi_noise;
-%计算两幅图像的峰值信噪比
+
 k = 8;
-%k为图像时表示单个像素点所用的二进制位数，即位深。
+
 fmax = 2.^k - 1;
 a = fmax.^2;
 e = double(f1) - double(f2);
@@ -64,13 +59,13 @@ Pgaussian = 10*log10(m*n*a/b)
 
 %--------------------------------------%
 
-Img0=imread('high.png');%读取图片
+Img0=imread('high.png');
 Img0 = rgb2gray(Img0);
-PSF=fspecial('motion',3);%创建PSF
-gb=imfilter(Img0,PSF,'circular');%创建退化图像
-%Img=imnoise(gb,'gaussian',0,0.01);%加高斯噪声
-Img=imnoise(gb,'salt & pepper',0.05);%加椒盐噪声
-%Img=imnoise(gb,'speckle',0.04);%加乘性噪声
+PSF=fspecial('motion',3);
+gb=imfilter(Img0,PSF,'circular');
+%Img=imnoise(gb,'gaussian',0,0.01);
+Img=imnoise(gb,'salt & pepper',0.05);
+%Img=imnoise(gb,'speckle',0.04);
 
 %imshow(Img)
 Img=double(Img);
@@ -78,16 +73,12 @@ Img_salt_0=Img;
 
 Img0=Img;
 
-[ny,nx]=size(Img); % 获取图像尺寸大小
+[ny,nx]=size(Img); 
 ep=1;
-ep2=ep^2;        % 定义ep2
+ep2=ep^2;        
 lam=0.023;
 dt=0.5;
-for i = 1:20  %迭代
-   % 中心差法计算梯度和微分
-   % WN  N  EN
-   % W   O  E 
-   % WS  S  ES
+for i = 1:20  
    I_x = (Img(:,[2:nx nx])-Img(:,[1 1:nx-1]))/2;  % Ix = (E-W)/2
    I_y = (Img([2:ny ny],:)-Img([1 1:ny-1],:))/2;  % Iy = (S-N)/2
    I_xx = Img(:,[2:nx nx])+Img(:,[1 1:nx-1])-2*Img; % Ixx = E+W-2*O
@@ -100,23 +91,23 @@ for i = 1:20  %迭代
    Num = I_xx.*(ep2+I_y.^2)-2*I_x.*I_y.*I_xy+I_yy.*(ep2+I_x.^2);
    Den = (ep2+I_x.^2+I_y.^2).^(3/2);
    
-   % 计算I_t
+  
    I_t = Num./Den + lam.*(Img0-Img);
-   %梯度下降法迭代求解PDE(扩散)
+   
    Img=Img+dt*I_t; 
 end
 Img_salt_1=Img;
 %figure
 %Img4=mat2gray(Img);
 %imshow(Img4)
-% 计算PSNR
+
 
 f1 = Img_salt_1;
 f2 = gb;
 % f3=image_gaosi_noise;
-%计算两幅图像的峰值信噪比
+
 k = 8;
-%k为图像时表示单个像素点所用的二进制位数，即位深。
+
 fmax = 2.^k - 1;
 a = fmax.^2;
 e = double(f1) - double(f2);
@@ -128,13 +119,13 @@ Psalt = 10*log10(m*n*a/b)
 
 %--------------------------------------%
 
-Img0=imread('high.png');%读取图片
+Img0=imread('high.png');
 Img0 = rgb2gray(Img0);
-PSF=fspecial('motion',3);%创建PSF
-gb=imfilter(Img0,PSF,'circular');%创建退化图像
-%Img=imnoise(gb,'gaussian',0,0.01);%加高斯噪声
-%Img=imnoise(gb,'salt & pepper',0.05);%加椒盐噪声
-Img=imnoise(gb,'speckle',0.04);%加乘性噪声
+PSF=fspecial('motion',3);
+gb=imfilter(Img0,PSF,'circular');
+%Img=imnoise(gb,'gaussian',0,0.01);
+%Img=imnoise(gb,'salt & pepper',0.05);
+Img=imnoise(gb,'speckle',0.04);
 
 %imshow(Img)
 Img=double(Img);
@@ -142,16 +133,12 @@ Img_speckle_0=Img;
 
 Img0=Img;
 
-[ny,nx]=size(Img); % 获取图像尺寸大小
+[ny,nx]=size(Img); 
 ep=1;
-ep2=ep^2;        % 定义ep2
+ep2=ep^2;        
 lam=0.023;
 dt=0.5;
-for i = 1:20  %迭代
-   % 中心差法计算梯度和微分
-   % WN  N  EN
-   % W   O  E 
-   % WS  S  ES
+for i = 1:20  
    I_x = (Img(:,[2:nx nx])-Img(:,[1 1:nx-1]))/2;  % Ix = (E-W)/2
    I_y = (Img([2:ny ny],:)-Img([1 1:ny-1],:))/2;  % Iy = (S-N)/2
    I_xx = Img(:,[2:nx nx])+Img(:,[1 1:nx-1])-2*Img; % Ixx = E+W-2*O
@@ -164,23 +151,23 @@ for i = 1:20  %迭代
    Num = I_xx.*(ep2+I_y.^2)-2*I_x.*I_y.*I_xy+I_yy.*(ep2+I_x.^2);
    Den = (ep2+I_x.^2+I_y.^2).^(3/2);
    
-   % 计算I_t
+
    I_t = Num./Den + lam.*(Img0-Img);
-   %梯度下降法迭代求解PDE(扩散)
+
    Img=Img+dt*I_t; 
 end
 Img_speckle_1=Img;
 %figure
 %Img4=mat2gray(Img);
 %imshow(Img4)
-% 计算PSNR
+
 
 f1 = Img_speckle_1;
 f2 = gb;
 % f3=image_gaosi_noise;
-%计算两幅图像的峰值信噪比
+
 k = 8;
-%k为图像时表示单个像素点所用的二进制位数，即位深。
+
 fmax = 2.^k - 1;
 a = fmax.^2;
 e = double(f1) - double(f2);
